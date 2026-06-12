@@ -1,10 +1,11 @@
 FROM alpine:3.18
 
-RUN apk add --no-cache git bash
+RUN apk add --no-cache git python3
 
 WORKDIR /app
 
-COPY sync.sh /app/sync.sh
-RUN chmod +x /app/sync.sh
+COPY sync.py /app/sync.py
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
 
-CMD ["/app/sync.sh"]
+CMD ["/app/start.sh"]
