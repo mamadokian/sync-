@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-# Config
-SOURCE_REPO="https://github.com/source-org/source-repo.git"
-PRIVATE_REPO="https://YOUR_GITHUB_TOKEN@github.com/your-username/your-private-repo.git"
+# Replace with your actual repos
+SOURCE_REPO="https://github.com/dvahana2424-web/sojogamesdatabase1.git"
+PRIVATE_REPO="https://${GITHUB_TOKEN}@github.com/RafeShahraki/sojogamesdatabase1-backup.git"
 
-# Clone if not exists, otherwise fetch
+# Setup: clone on first run
 if [ ! -d "/app/repo-mirror.git" ]; then
     echo "First run: cloning mirror..."
     git clone --mirror "$SOURCE_REPO" /app/repo-mirror.git
@@ -13,11 +13,23 @@ if [ ! -d "/app/repo-mirror.git" ]; then
     git remote add private "$PRIVATE_REPO"
 else
     cd /app/repo-mirror.git
-    echo "Fetching updates from source..."
-    git fetch origin --prune
 fi
 
-echo "Pushing to private repo..."
-git push --mirror private
+# Sync function
+do_sync() {
+    echo "=== Sync started at $(date) ==="
+    git fetch origin --prune
+    git push --mirror private
+    echo "=== Sync completed at $(date) ==="
+    echo ""
+}
 
-echo "Sync completed at $(date)"
+# Run immediately on start
+do_sync
+
+# Loop every 2 hours (7200 seconds)
+while true; do
+    echo "Sleeping for 2 hours..."
+    sleep 7200
+    do_sync
+done
