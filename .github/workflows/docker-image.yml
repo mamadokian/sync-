@@ -1,0 +1,11 @@
+name: Trigger Sync
+on:
+  schedule:
+    - cron: '0 */2 * * *'  # every 2 hours
+  workflow_dispatch:
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -s https://sync-hok8.onrender.com || true
